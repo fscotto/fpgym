@@ -1,11 +1,17 @@
 package org.gym.fp
 
+import java.io.File
+import java.nio.CharBuffer
+
+import scala.collection._
+
 object App {
 
   def main(args: Array[String]): Unit = {
     doOperationsOnTuples()
     doHighOrderFunctions()
     doPatternMatching()
+    doInheritance()
   }
 
   def doOperationsOnTuples(): Unit = {
@@ -81,7 +87,9 @@ object App {
     }
 
     val domainName = "www.example.com"
+
     def getURL = urlBuilder(ssl = true, domainName)
+
     val endpoint = "users"
     val query = "id=1"
     val url = getURL(endpoint, query)
@@ -134,6 +142,74 @@ object App {
     println(showImportantNotification(importantEmail, importantPeopleInfo))
     println(showImportantNotification(importantSms, importantPeopleInfo))
 
+  }
+
+  def doInheritance(): Unit = {
+    class Customer(val name: String, val address: String) extends Ordered[Customer] {
+      val total: Double = 0.0
+
+      override def compare(that: Customer): Int = this.name.compareTo(that.name)
+
+      override def toString: String = s"$name is located at $address"
+    }
+    class DiscountedCustomer(name: String, address: String) extends Customer(name, address)
+
+    trait Readable {
+      def read(buffer: CharBuffer): Int
+    }
+    class FileReader(file: File) extends Readable with AutoCloseable {
+      override def read(buffer: CharBuffer): Int = {
+        val linesRead: Int = 0
+        return linesRead
+      }
+
+      override def close(): Unit = ???
+    }
+
+    trait Sortable[A <: Ordered[A]] extends Iterable[A] {
+      def sort: Seq[A] = {
+        this.toList.sorted
+      }
+    }
+
+    class Customers extends Sortable[Customer] {
+      private val customers = mutable.Set[Customer]()
+
+      def add(customer: Customer) = customers.add(customer)
+
+      override def iterator: Iterator[Customer] = customers.iterator
+    }
+    class CustomersSortableBySpend extends Customers {
+      override def sort: Seq[Customer] = {
+        this.toList.sorted((a: Customer, b: Customer) => b.total.compare(a.total))
+      }
+    }
+
+    val customers = new Customers()
+    customers.add(new Customer("Fred Jones", "8 Tuna Lane"))
+    customers.add(new Customer("Velma Dinkley", "316 Circle Drive"))
+    customers.add(new Customer("Daphne Blake", "101 Easy St"))
+    customers.add(new Customer("Norville Rogers", "1 Lane"))
+    println(customers.sort)
+
+    trait Counter {
+      protected var count: Int // abstract field
+
+      def increment()
+    }
+
+    class IncrementByOne extends Counter {
+      override protected var count: Int = 0
+
+      override def increment(): Unit = count += 1
+    }
+
+    class ExponentialIncrementer(rate: Int) extends Counter {
+      override protected var count: Int = 1
+
+      override def increment(): Unit = count *= rate
+
+    }
   }
 
 }

@@ -6,11 +6,13 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="modernjava" />
         <module name="scala" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="fpgym" target="8" />
+      <module name="modernjava" target="9" />
       <module name="scala" target="1.5" />
     </bytecodeTargetLevel>
   </component>

@@ -11,8 +11,8 @@
 
     <modules>
         <module>scala</module>
-			<module>modern-java</module>
-		</modules>
+        <module>modern-java</module>
+    </modules>
 
     <dependencyManagement>
         <dependencies>

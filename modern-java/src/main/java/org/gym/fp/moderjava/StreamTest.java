@@ -2,6 +2,7 @@ package org.gym.fp.moderjava;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static java.lang.System.out;
@@ -124,7 +125,7 @@ public class StreamTest {
                 new Transaction(mario, 2012, 710),
                 new Transaction(mario, 2012, 700),
                 new Transaction(alan, 2012, 950)
-        );
+                                                      );
         out.println("1)");
         transactions.stream()
                     .filter(t -> t.getYear() == 2011)
@@ -142,10 +143,51 @@ public class StreamTest {
         transactions.stream()
                     .map(Transaction::getTrader)
                     .filter(trader -> "Cambridge".equalsIgnoreCase(trader.getCity()))
+                    .distinct() // anche se sul testo non è specificato che dovevano essere diversi
                     .sorted(Comparator.comparing(Trader::getName))
                     .collect(Collectors.toList())
                     .forEach(out::println);
-
+        out.println("4)");
+        String result = transactions.stream()
+                                    .map(Transaction::getTrader)
+                                    .map(Trader::getName)
+                                    .distinct()
+                                    .sorted()
+                                    .reduce("", (acc, name) -> acc + name);
+        out.println(result);
+        out.println("5)");
+        boolean anyTraderInMilan = transactions.stream()
+                                               .map(Transaction::getTrader)
+                                               .anyMatch(trader -> "Milan".equalsIgnoreCase(trader.getCity()));
+        out.println(anyTraderInMilan);
+        out.println("6)");
+        transactions.stream()
+                    .filter(transaction -> "Cambridge".equalsIgnoreCase(transaction.getTrader().getCity()))
+                    .forEach(transaction -> out.println(transaction.getValue()));
+        out.println("7)");
+        transactions.stream()
+                    .mapToInt(Transaction::getValue)
+                    .max()
+                    .ifPresent(out::println);
+        out.println("8)");
+        transactions.stream()
+                    .mapToInt(Transaction::getValue)
+                    .min()
+                    .ifPresent(out::println);
+        out.println("----------------------------------------");
+        IntStream.rangeClosed(1, 100)
+                 .boxed()
+                 .flatMap(a -> IntStream.rangeClosed(a, 100)
+                                        .mapToObj(b -> new double[]{a, b, Math.sqrt(a * a + b * b)})
+                                        .filter(t -> t[2] % 1 == 0)
+                         )
+                 .limit(5)
+                 .forEach(triple -> out.printf("(%.0f, %.0f, %.0f)\n", triple[0], triple[1], triple[2]));
+        out.println("----------------------------------------");
+        Stream.iterate(new int[] {0, 1}, t -> new int[] {t[1], t[0] + t[1]})
+              .limit(20)
+              .forEach(pair -> out.printf("(%d, %d) ", pair[0], pair[1]));
+        out.println();
         out.println("----------------------------------------");
     }
 
@@ -158,7 +200,7 @@ public class StreamTest {
                 new Dish("tomato", 30, Dish.Type.VEGETARIAN),
                 new Dish("tunny", 120, Dish.Type.FISH),
                 new Dish("potato", 70, Dish.Type.VEGETARIAN)
-        );
+                                         );
         return Collections.unmodifiableList(dishes);
     }
 

@@ -128,7 +128,7 @@ public class StreamTest {
                 new Transaction(mario, 2012, 710),
                 new Transaction(mario, 2012, 700),
                 new Transaction(alan, 2012, 950)
-        );
+                                               );
         out.println("1)");
         transactions.stream()
                     .filter(t -> t.getYear() == 2011)
@@ -183,7 +183,7 @@ public class StreamTest {
                  .flatMap(a -> IntStream.rangeClosed(a, 100)
                                         .mapToObj(b -> new double[]{a, b, Math.sqrt(a * a + b * b)})
                                         .filter(t -> t[2] % 1 == 0)
-                 )
+                         )
                  .limit(5)
                  .forEach(triple -> out.printf("(%.0f, %.0f, %.0f)\n", triple[0], triple[1], triple[2]));
         out.println("----------------------------------------");
@@ -231,14 +231,14 @@ public class StreamTest {
         Map<Dish.Type, List<Dish>> caloricDishesByType =
                 menu.stream()
                     .collect(groupingBy(Dish::getType,
-                            filtering(dish -> dish.getCalories() > 500,
-                                    toList())));
+                                        filtering(dish -> dish.getCalories() > 500,
+                                                  toList())));
         out.println(caloricDishesByType);
         out.println("----------------------------------------");
         Map<Dish.Type, List<String>> dishNamesByType =
                 menu.stream()
                     .collect(groupingBy(Dish::getType,
-                            mapping(Dish::getName, toList())));
+                                        mapping(Dish::getName, toList())));
         out.println(dishNamesByType);
         out.println("----------------------------------------");
         Map<String, List<String>> dishTags = Map.of(
@@ -251,18 +251,18 @@ public class StreamTest {
                 "pizza", asList("tasty", "salty"),
                 "prawns", asList("tasty", "roasted"),
                 "salmon", asList("delicious", "fresh")
-        );
+                                                   );
         Map<Dish.Type, Set<String>> dishNamesByType2 =
                 menu.stream()
                     .collect(groupingBy(Dish::getType,
-                            flatMapping(dish -> {
-                                // FIXME: The example of book is not safety
-                                List<String> tags = dishTags.get(dish.getName());
-                                if (tags != null) {
-                                    return tags.stream();
-                                }
-                                return Stream.empty();
-                            }, toSet())));
+                                        flatMapping(dish -> {
+                                            // FIXME: The example of book is not safety
+                                            List<String> tags = dishTags.get(dish.getName());
+                                            if (tags != null) {
+                                                return tags.stream();
+                                            }
+                                            return Stream.empty();
+                                        }, toSet())));
         out.println(dishNamesByType2);
         out.println("----------------------------------------");
         Map<Dish.Type, Map<CaloricLevel, List<Dish>>> dishesByTypeCaloricLevel =
@@ -278,6 +278,43 @@ public class StreamTest {
                     })));
         out.println(dishesByTypeCaloricLevel);
         out.println("----------------------------------------");
+        Map<Boolean, List<Dish>> partitionedMenu = menu.stream().collect(partitioningBy(Dish::isVegetarian));
+        out.println(partitionedMenu);
+        out.println("----------------------------------------");
+        Map<Boolean, Map<Dish.Type, List<Dish>>> vegetarianDishesByType =
+                menu.stream().collect(partitioningBy(Dish::isVegetarian, groupingBy(Dish::getType)));
+        out.println(vegetarianDishesByType);
+        out.println("----------------------------------------");
+        Map<Boolean, Dish> mostCaloricPartitionedByVegetarian =
+                menu.stream()
+                    .collect(partitioningBy(Dish::isVegetarian,
+                                            collectingAndThen(maxBy(comparingInt(Dish::getCalories)), Optional::get)));
+        out.println(mostCaloricPartitionedByVegetarian);
+        out.println("----------------------------------------");
+        out.println(partitionPrimes(100));
+        out.println("----------------------------------------");
+        List<Dish> dishes = menu.stream()
+                                .filter(Dish::isVegetarian)
+                                .collect(new ToListCollector<>());
+        out.println(dishes);
+        out.println("----------------------------------------");
+        out.println(partitionPrimesWithCustomCollector(100));
+        out.println("----------------------------------------");
+    }
+
+    public static Map<Boolean, List<Integer>> partitionPrimes(int n) {
+        return IntStream.rangeClosed(2, n).boxed()
+                        .collect(partitioningBy(candidate -> isPrime(candidate)));
+    }
+
+    public static boolean isPrime(int candidate) {
+        return IntStream.rangeClosed(2, candidate - 1)
+                        .limit((long) Math.floor(Math.sqrt(candidate)) - 1)
+                        .noneMatch(i -> candidate % i == 0);
+    }
+
+    static Map<Boolean, List<Integer>> partitionPrimesWithCustomCollector(int n) {
+        return IntStream.rangeClosed(2, n).boxed().collect(new PrimeNumbersCollector());
     }
 
     enum CaloricLevel {DIET, NORMAL, FAT}
@@ -291,7 +328,7 @@ public class StreamTest {
                 new Dish("tomato", 30, Dish.Type.VEGETARIAN),
                 new Dish("tunny", 120, Dish.Type.FISH),
                 new Dish("potato", 70, Dish.Type.VEGETARIAN)
-        );
+                                  );
         return Collections.unmodifiableList(dishes);
     }
 

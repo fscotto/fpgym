@@ -1,8 +1,12 @@
 package org.gym.fp.moderjava;
 
 import java.util.*;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.ForkJoinTask;
 import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import static java.lang.System.out;
 import static java.util.Arrays.asList;
@@ -10,6 +14,10 @@ import static java.util.Comparator.comparingInt;
 import static java.util.stream.Collectors.*;
 
 public class StreamTest {
+    private static final String SENTENCE =
+            " Nel   mezzo del cammin  di nostra  vita " +
+                    "mi ritrovia in una selva oscura" +
+                    " ché la  dritta via era  smarrita ";
 
     public static void main(String[] args) {
         doStreamFilterDemo();
@@ -17,6 +25,7 @@ public class StreamTest {
         doStreamFindOrMatchingDemo();
         doStreamReducingDemo();
         doStreamCollectingDemo();
+        doStreamParallelDemo();
     }
 
     private static void doStreamFilterDemo() {
@@ -300,6 +309,31 @@ public class StreamTest {
         out.println("----------------------------------------");
         out.println(partitionPrimesWithCustomCollector(100));
         out.println("----------------------------------------");
+    }
+
+    private static void doStreamParallelDemo() {
+        out.println("ForkJoin result (1, 100) = " + forkJoinSum(100));
+        out.println("----------------------------------------");
+        Stream<Character> stream1 = IntStream.range(0, SENTENCE.length()).mapToObj(SENTENCE::charAt);
+        out.printf("Found %d words\n", countWords(stream1));
+        out.println("----------------------------------------");
+        Spliterator<Character> spliterator = new WordCounterSpliterator(SENTENCE);
+        Stream<Character> stream2 = StreamSupport.stream(spliterator, true);
+        out.printf("Found %d words\n", countWords(stream2));
+        out.println("----------------------------------------");
+    }
+
+    private static int countWords(Stream<Character> stream) {
+        WordCounter wordCounter = stream.reduce(new WordCounter(0, true),
+                                                WordCounter::accumulate,
+                                                WordCounter::combine);
+        return wordCounter.getCounter();
+    }
+
+    private static long forkJoinSum(int n) {
+        long[] numbers = LongStream.rangeClosed(1, n).toArray();
+        ForkJoinTask<Long> task = new ForkJoinSumCalculator(numbers);
+        return new ForkJoinPool().invoke(task);
     }
 
     public static Map<Boolean, List<Integer>> partitionPrimes(int n) {

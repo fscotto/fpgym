@@ -20,6 +20,8 @@ public class OptionalTest {
         Person person2 = new Person(Optional.ofNullable(myCar2));
         out.println("My insurance's name is " + getCarInsuranceName(Optional.ofNullable(person2)));
         out.println("----------------------------------------");
+
+        out.println("----------------------------------------");
     }
 
     static String getCarInsuranceName(Optional<Person> maybePerson) {
@@ -28,6 +30,19 @@ public class OptionalTest {
                 .flatMap(Car::getInsurance)
                 .map(Insurance::getName)
                 .orElse("Unknown");
+    }
+
+    static Insurance findCheapestInsurance(Person person, Car car) {
+        Insurance cheapestInsurance = new Insurance("Allianz");
+        return cheapestInsurance;
+    }
+
+    static Optional<Insurance> nullSafeFindCheapestInsurance(Optional<Person> person, Optional<Car> car) {
+        return person.flatMap(p -> car.map(c -> findCheapestInsurance(p, c)));
+//        if (person.isPresent() && car.isPresent()) {
+//            return Optional.of(findCheapestInsurance(person.get(), car.get()));
+//        }
+//        return Optional.empty();
     }
 
 }

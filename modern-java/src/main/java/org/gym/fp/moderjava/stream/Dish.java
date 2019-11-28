@@ -1,4 +1,4 @@
-package org.gym.fp.moderjava;
+package org.gym.fp.moderjava.stream;
 
 import lombok.AllArgsConstructor;
 import lombok.Value;

@@ -1,4 +1,4 @@
-package org.gym.fp.moderjava;
+package org.gym.fp.moderjava.stream;
 
 public class WordCounter {
     private final int counter;

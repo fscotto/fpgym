@@ -1,4 +1,4 @@
-package org.gym.fp.moderjava;
+package org.gym.fp.moderjava.stream;
 
 import java.util.Spliterator;
 import java.util.function.Consumer;

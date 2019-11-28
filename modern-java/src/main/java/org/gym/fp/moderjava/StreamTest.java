@@ -1,5 +1,7 @@
 package org.gym.fp.moderjava;
 
+import org.gym.fp.moderjava.stream.*;
+
 import java.util.*;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ForkJoinTask;

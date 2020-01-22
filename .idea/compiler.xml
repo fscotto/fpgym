@@ -6,6 +6,7 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="functional-programming-java" />
         <module name="modernjava" />
         <module name="scala" />
         <module name="modern-java" />
@@ -13,6 +14,7 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="fpgym" target="8" />
+      <module name="functional-programming-java" target="8" />
       <module name="modern-java" target="9" />
       <module name="modernjava" target="9" />
       <module name="scala" target="1.5" />

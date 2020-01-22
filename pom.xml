@@ -12,7 +12,8 @@
     <modules>
         <module>scala</module>
         <module>modern-java</module>
-    </modules>
+			<module>functional-programming-java</module>
+		</modules>
 
     <dependencyManagement>
         <dependencies>

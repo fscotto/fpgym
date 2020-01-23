@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-				 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-				 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<artifactId>functional-programming-java</artifactId>
-	<packaging>jar</packaging>
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>functional-programming-java</artifactId>
+    <description>Questo modulo contiene gli esercizi e le prove dal libro "Functional Programmin in Java"</description>
+    <packaging>jar</packaging>
 
-	<parent>
-		<artifactId>fpgym</artifactId>
-		<groupId>org.gym.fp</groupId>
-		<version>1.0</version>
-	</parent>
+    <parent>
+        <artifactId>fpgym</artifactId>
+        <groupId>org.gym.fp</groupId>
+        <version>1.0</version>
+    </parent>
 
-	<properties>
-		<maven.compiler.source>8</maven.compiler.source>
+    <properties>
+        <maven.compiler.source>8</maven.compiler.source>
 		<maven.compiler.target>8</maven.compiler.target>
 	</properties>
 

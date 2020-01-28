@@ -2,10 +2,13 @@ package org.gym.fp.fpjava.demo;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.gym.fp.fpjava.type.Function;
 import org.gym.fp.fpjava.type.TailCall;
 
 import java.math.BigInteger;
+import java.util.List;
 
+import static org.gym.fp.fpjava.type.CollectionUtilities.*;
 import static org.gym.fp.fpjava.type.TailCall.ret;
 import static org.gym.fp.fpjava.type.TailCall.suspend;
 
@@ -15,6 +18,9 @@ public class RecursionDemo {
     public static void run() {
         System.out.println(add(10, 1000));
         System.out.print(fibonacci(10000));
+
+        Function<Integer, Integer> add = y -> y + 1;
+        System.out.println(composeAll(map(range(0, 10_000), x -> add)).apply(0));
     }
 
     public static int add(int x, int y) {
@@ -41,5 +47,9 @@ public class RecursionDemo {
             }
         }
         return (new Aux()).fib(BigInteger.ONE, BigInteger.ZERO, BigInteger.valueOf(number)).eval();
+    }
+
+    public static <T> Function<T, T> composeAll(List<Function<T, T>> functions) {
+        return x -> foldRight(functions, x, f -> f::apply);
     }
 }

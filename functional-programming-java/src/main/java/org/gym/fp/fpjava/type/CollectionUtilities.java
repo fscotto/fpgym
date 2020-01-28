@@ -5,6 +5,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static org.gym.fp.fpjava.type.TailCall.ret;
+import static org.gym.fp.fpjava.type.TailCall.suspend;
+
 public final class CollectionUtilities {
 
     public static <T> List<T> list() {
@@ -54,11 +57,21 @@ public final class CollectionUtilities {
 
     // ES. 3.6
     public static <T, U> U foldLeft(List<T> list, U identity, Function<U, Function<T, U>> f) {
-        U result = identity;
-        for (T e : list) {
-            result = f.apply(result).apply(e);
-        }
-        return result;
+        /*
+          U result = identity;
+          for (T e : list) {
+              result = f.apply(result).apply(e);
+          }
+          return result;
+        */
+        return _foldLeft(list, identity, f).eval();
+    }
+
+    // ES. 4.3
+    private static <T, U> TailCall<U> _foldLeft(List<T> list, U identity, Function<U, Function<T, U>> f) {
+        return list.isEmpty()
+                ? ret(identity)
+                : suspend(() -> _foldLeft(tail(list), f.apply(identity).apply(head(list)), f));
     }
 
     // ES. 3.7
@@ -118,6 +131,17 @@ public final class CollectionUtilities {
 //        }
 //        return result;
         return unfold(start, x -> x + 1, x -> x < end);
+    }
+
+    // ES. 4.4
+    public static List<Integer> rangeRec(int start, int end) {
+        return _range(list(), start, end).eval();
+    }
+
+    private static TailCall<List<Integer>> _range(List<Integer> acc, Integer start, Integer end) {
+        return end <= start
+                ? ret(acc)
+                : suspend(() -> _range(append(acc, start), start + 1, end));
     }
 
     // ES. 3.12

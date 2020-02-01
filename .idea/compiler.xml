@@ -10,10 +10,12 @@
         <module name="modernjava" />
         <module name="scala" />
         <module name="modern-java" />
+        <module name="functional-kotlin" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="fpgym" target="8" />
+      <module name="functional-kotlin" target="8" />
       <module name="functional-programming-java" target="8" />
       <module name="modern-java" target="9" />
       <module name="modernjava" target="9" />
